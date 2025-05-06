@@ -8,23 +8,73 @@ export class Game extends Engine {
         super({ 
             width: 1280,
             height: 720,
-            maxFps: 60,
+            maxFps: 144,
             displayMode: DisplayMode.FitScreen
          })
         this.start(ResourceLoader).then(() => this.startGame())
     }
 
     startGame() {
-        console.log("start de game!")
-        const fish = new Actor()
-        fish.graphics.use(Resources.Fish.toSprite())
-        fish.pos = new Vector(500, 300)
-        fish.vel = new Vector(-10,0)
-        fish.events.on("exitviewport", (e) => this.fishLeft(e))
-        this.add(fish)
-    }
+        const aantalVissen = 30;
+        const W = this.drawWidth;   // 1280
+        const H = this.drawHeight;  // 720
+      
+        // kies willekeurig welke vis Jeroen wordt
+        const jeroenIndex = Math.floor(Math.random() * aantalVissen);
+      
+        for (let i = 0; i < aantalVissen; i++) {
+          const fish = new Actor({
+            width: 64,
+            height: 32
+          });
+      
+          // als i === jeroenIndex: Jeroen, anders vis1 of vis2
+          const spriteKey =
+            i === jeroenIndex
+              ? Resources.Jeroen
+              : (i % 2 === 0 ? Resources.Fish : Resources.Fish2);
+      
+          fish.graphics.use(spriteKey.toSprite());
+      
+          // random start buiten rechts
+          fish.pos = new Vector(
+            W + Math.random() * 100,
+            Math.random() * H
+          );
+      
+          // random snelheid naar links met beetje y-variatie
+          const minS = 50, maxS = 200;
+          fish.vel = new Vector(
+            - (minS + Math.random() * (maxS - minS)),
+            (Math.random() - 0.5) * 50
+          );
+      
+          // dezelfde handler voor alle actors (ook Jeroen!)
+          fish.events.on("exitviewport", e => {
+            // reset positie
+            e.target.pos = new Vector(
+              W + Math.random() * 100,
+              Math.random() * H
+            );
+            // reset snelheid
+            e.target.vel = new Vector(
+              - (minS + Math.random() * (maxS - minS)),
+              (Math.random() - 0.5) * 50
+            );
+          });
+      
+          this.add(fish);
+        }
+      }
+      
+      
+      
 
     fishLeft(e) {
+        e.target.pos = new Vector(1350, Math.random())
+    }
+
+    fish2Left(e) {
         e.target.pos = new Vector(1350, 300)
     }
 }

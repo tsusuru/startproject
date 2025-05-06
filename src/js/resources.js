@@ -2,7 +2,9 @@ import { ImageSource, Sound, Resource, Loader } from 'excalibur'
 
 // voeg hier jouw eigen resources toe
 const Resources = {
-    Fish: new ImageSource('images/fish.png')
+    Fish: new ImageSource('images/fish4.jpg'),
+    Fish2: new ImageSource('images/fish3.jpg'),
+    Jeroen: new ImageSource('images/jeroen.jfif')
 }
 
 
